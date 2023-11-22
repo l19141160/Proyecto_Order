@@ -4,7 +4,7 @@ class _db {
 	async init() {
 		this.db = await AsyncDatabase.open("Orders.db");
 		await this.db.run(
-			"CREATE TABLE IF NOT EXISTS orders (id, date, status, created_by)",
+			"CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY, date int not null, status text, created_by text)",
 			(err) => {
 				if (err) {
 					console.error(err.message);
@@ -12,7 +12,7 @@ class _db {
 			}
 		);
 		await this.db.run(
-			"CREATE TABLE IF NOT EXISTS order_items (id, order_id, product_id, quantity)",
+			"CREATE TABLE IF NOT EXISTS order_items (id INTEGER PRIMARY KEY, order_id, product_id, quantity)",
 			(err) => {
 				if (err) {
 					console.error(err.message);
@@ -21,7 +21,7 @@ class _db {
 		);
 
 		await this.db.run(
-			"CREATE TABLE IF NOT EXISTS products (id, name, price)",
+			"CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY, name, price)",
 			(err) => {
 				if (err) {
 					console.error(err.message);

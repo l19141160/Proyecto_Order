@@ -3,10 +3,12 @@ import register from './src/register.js'
 import login from './src/login.js'
 import list from './src/list.js'
 import authenticate from './src/authenticate.js'
+import cors from 'cors'
 const app = express()
 const port = 3000
 
 app.use(express.json())
+app.use(cors());
 
 app.post('/register', (req, res) => {
   register(req.body.username, req.body.password).then(() => {

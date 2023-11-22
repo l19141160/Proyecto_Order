@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Order Project</title>
+	<link rel="stylesheet" href="../output.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+</head>
+<body>
+	<div class="h-screen p-10">
+		<button id="toOrders" class="bg-slate-500 text-white rounded-full py-1 px-5 mb-5">Ir a Ordenes</button>
+		<div class="p-5 py-10 rounded-lg border border-slate-500">
+			<h1 class="text-2xl text-center mb-5">Productos</h1>
+			<div id="products-container" class="flex gap-3 justify-center">
+			</div>
+		</div>
+		<div class="mt-10 p-5 py-10 rounded-lg border border-slate-500">
+			<h1 class="text-2xl text-center mb-5">Nueva orden</h1>
+			<div id="order-container" class="flex gap-3 justify-center">
+			</div>
+			<button id="createOrder" class="bg-slate-500 text-white rounded-lg py-1 w-full mt-5">Crear orden</button>
+		</div>
+	</div>
+
+	<script>
+		const token = localStorage.getItem('token');
+		let newOrder = [];
+
+		axios.get('http://localhost:3001/product', { headers: {'Authorization': `${token}`} })
+			.then(res => {
+				const products = res.data;
+
+				const productsContainer = document.getElementById('products-container');
+
+				products.forEach(product => {
+					const productContainer = document.createElement('div');
+					productContainer.classList.add('border', 'border-slate-500', 'px-10', 'py-5', 'gap-3', 'rounded-lg');
+
+					const productName = document.createElement('h1');
+					productName.classList.add('text-2xl', 'text-center');
+					productName.innerText = product.name;
+
+					const productPrice = document.createElement('div');
+					productPrice.classList.add('text-center');
+					productPrice.innerText = `Precio: ${product.price}`;
+
+					const addProduct = document.createElement('button');
+					addProduct.classList.add('bg-slate-500', 'text-white', 'rounded-lg', 'mt-3', 'py-1', 'w-full');
+					addProduct.innerText = 'Agregar';
+					addProduct.addEventListener('click', () => {
+						const orderContainer = document.getElementById('order-container');
+
+						const orderProduct = document.createElement('div');
+						orderProduct.classList.add('border', 'border-slate-500', 'px-10', 'py-5', 'gap-3', 'rounded-lg');
+
+						const orderProductName = document.createElement('h1');
+						orderProductName.classList.add('text-2xl', 'text-center');
+						orderProductName.innerText = product.name;
+
+						const orderProductPrice = document.createElement('div');
+						orderProductPrice.classList.add('text-center');
+						orderProductPrice.innerText = `Precio: ${product.price}`;
+
+						orderProduct.appendChild(orderProductName);
+						orderProduct.appendChild(orderProductPrice);
+
+						orderContainer.appendChild(orderProduct);
+						newOrder.push(product.id);
+					})
+
+					productContainer.appendChild(productName);
+					productContainer.appendChild(productPrice);
+					productContainer.appendChild(addProduct);
+
+					productsContainer.appendChild(productContainer);
+				})
+
+			}).catch(err => {
+				console.log(err);
+			})
+
+		const createOrder = document.getElementById('createOrder');
+		createOrder.addEventListener('click', () => {
+			if(newOrder.length === 0) return alert('No hay productos en la orden');
+
+			axios.post('http://localhost:3001/order', {
+				products: newOrder
+			}, { headers: {'Authorization': `${token}`} })
+				.then(res => {
+					alert('Orden creada');
+					window.location.href = './orders.html';
+				}).catch(err => {
+					alert('Error al crear orden');
+				})
+		})
+
+		const toOrders = document.getElementById('toOrders');
+		toOrders.addEventListener('click', () => {
+			window.location.href = 'orders.html';
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Order Project</title>
+	<link rel="stylesheet" href="../output.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+</head>
+<body>
+	<div class="h-screen flex items-center justify-center">
+		<div class="flex flex-col border border-primary px-10 py-5 gap-3 rounded-lg w-96">
+			<h1 class="text-2xl text-center">Registro</h1>
+			<span>
+				Nombre de usuario: <br>
+				<input class="border rounded w-full" type="text" id="username">
+			</span>
+			<span>
+				Contraseña: <br>
+				<input class="border rounded w-full" type="password" id="password">
+			</span>
+			<button id="signUp" class="bg-slate-500 text-white rounded-lg py-1">Registrar</button>
+			<button id="signIn" class="border border-slate-500 rounded-lg py-1">Iniciar sesión</button>
+		</div>
+	</div>
+
+	<script>
+		const signIn = document.getElementById('signIn');
+		const signUp = document.getElementById('signUp');
+
+		signIn.addEventListener('click', () => {
+			window.location.href = '../index.html';
+		});
+
+		signUp.addEventListener('click', () => {
+			const username = document.getElementById('username').value;
+			const password = document.getElementById('password').value;
+
+			axios.post('http://localhost:3000/register', {
+				username,
+				password
+			}).then(res => {
+				alert('Usuario registrado');
+				window.location.href = '../index.html';
+			}).catch(err => {
+				alert('Error al registrar usuario');
+			})
+		});
+	</script>
+</body>
+</html>

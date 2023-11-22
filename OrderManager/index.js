@@ -3,10 +3,12 @@ import listProducts from './src/listProducts.js'
 import createOrder from './src/createOrder.js'
 import getOrders from './src/getOrders.js'
 import axios from 'axios'
+import cors from 'cors'
 const app = express()
 const port = 3001
 
 app.use(express.json())
+app.use(cors())
 
 app.get('/product', async (req, res) => {
   const token = req.headers.authorization
@@ -32,8 +34,9 @@ app.get('/product', async (req, res) => {
 app.post('/order', async (req, res) => {
   const token = req.headers.authorization
 
+  let username
   try {
-    await authenticate(token)
+    username = await authenticate(token)
   }
   catch (err) {
     res.status(401).send('Unauthorized')
@@ -41,7 +44,7 @@ app.post('/order', async (req, res) => {
   }
 
   try {
-    const orderId = await createOrder(req.body.username, req.body.products)
+    const orderId = await createOrder(username, req.body.products)
     res.send(orderId.toString())
   }
   catch (err) {

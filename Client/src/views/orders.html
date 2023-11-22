@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Order Project</title>
+	<link rel="stylesheet" href="../output.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+</head>
+<body>
+	<div class="h-screen p-10">
+		<button id="toProducts" class="bg-slate-500 text-white rounded-full py-1 px-5 mb-5">Ir a Productos</button>
+
+		<div class="p-5 py-10 rounded-lg border border-slate-500">
+			<h1 class="text-2xl text-center mb-5">Ordenes</h1>
+			<div id="products-container" class="flex gap-3 justify-center">
+			</div>
+		</div>
+
+	<script>
+		const token = localStorage.getItem('token');
+
+		axios.get('http://localhost:3001/order', { headers: {'Authorization': `${token}`} })
+			.then(res => {
+				const orders = res.data;
+
+				const productsContainer = document.getElementById('products-container');
+
+				orders.forEach(order => {
+					const orderContainer = document.createElement('div');
+					orderContainer.classList.add('border', 'border-slate-500', 'px-10', 'py-5', 'gap-3', 'rounded-lg');
+
+					const orderName = document.createElement('h1');
+					orderName.classList.add('text-2xl', 'text-center');
+					orderName.innerText = order.items.length + (order.items.length > 1 ? ' Productos' : ' Producto');
+
+					const orderDate = document.createElement('div');
+					orderDate.classList.add('text-center');
+					orderDate.innerText = `Fecha: ${new Date(order.date).toDateString()}`;
+
+					const orderStatus = document.createElement('div');
+					orderStatus.classList.add('text-center');
+					orderStatus.innerText = `Estado: ${order.status}`;
+
+					const orderTotal = document.createElement('div');
+					orderTotal.classList.add('text-center');
+					let total = order.items.reduce((acc, item) => acc + item.item.price, 0);
+					total = total.toFixed(2);
+					orderTotal.innerText = `Total: $${total}`;
+
+					orderContainer.appendChild(orderName);
+					orderContainer.appendChild(orderDate);
+					orderContainer.appendChild(orderStatus);
+					orderContainer.appendChild(orderTotal);
+
+					productsContainer.appendChild(orderContainer);
+				});
+			})
+			.catch(err => {
+				alert('Error al obtener ordenes');
+			})
+
+		const toProducts = document.getElementById('toProducts');
+		toProducts.addEventListener('click', () => {
+			window.location.href = 'products.html';
+		});
+	</script>
+</body>
+</html>
