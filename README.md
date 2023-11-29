@@ -1,5 +1,12 @@
 # Proyecto_Order
+Instalaciones previas necesarias:
+- Node
+- npm
 
-## Reminder Update
-No olviden actualizar el status del proyecto y subir los avances
-![image](https://github.com/l19141160/Proyecto_Order/assets/63263335/5c5260a2-65b1-4343-9c3f-20fec1428e88)
+Hay 3 carpetas con servicios independientes (Client, OrderManager, UserManager), en cada carpeta será necesario correr el script de instalación de dependencias con npm:
+- npm install
+
+Una vez instaladas todas las dependencias se puede ejecutar el comando *npm start* para iniciar cada servicio por separado.
+
+Para usar correctamente la aplicación es necesario tener los 3 servicios corriendo simultaneamente.
+
